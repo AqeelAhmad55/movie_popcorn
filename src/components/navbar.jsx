@@ -1,6 +1,29 @@
-import React, { useState } from "react";
+import { useKey } from "@/customHooks/useKey";
+import React, { useEffect, useRef } from "react";
 
 const Navbar = ({ movies, query, setQuery }) => {
+  const inputEl = useRef(null);
+
+  useKey("enter", function () {
+    if (document.activeElement === inputEl.current) return;
+    inputEl.current.focus();
+    setQuery("");
+  });
+
+  useEffect(
+    function () {
+      function callback(e) {
+        if (document.activeElement === inputEl.current) return;
+
+        if (e.code === "Enter") {
+          inputEl.current.focus();
+          setQuery("");
+        }
+      }
+      document.addEventListener("keydown", callback);
+    },
+    [setQuery]
+  );
   return (
     <nav className="nav-bar">
       <div className="logo">
@@ -13,6 +36,7 @@ const Navbar = ({ movies, query, setQuery }) => {
         placeholder="Search movies..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
+        ref={inputEl}
       />
       {query && (
         <p className="num-results">

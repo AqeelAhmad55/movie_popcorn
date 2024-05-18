@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import StarRating from "./starRating";
-import { Lobster } from "next/font/google";
 import Loading from "./loading";
+import { useKey } from "@/customHooks/useKey";
 
 const SelectedMovie = ({
   selectedId,
@@ -40,21 +40,7 @@ const SelectedMovie = ({
     setSelectedId(null);
   };
 
-  useEffect(
-    function () {
-      function callBack(e) {
-        if (e.code === "Tab") {
-          handleCloseMovie();
-        }
-      }
-      document.addEventListener("keydown", callBack);
-
-      return function () {
-        document.removeEventListener("keydown", callBack);
-      };
-    },
-    [handleCloseMovie]
-  );
+  useKey("tab", handleCloseMovie);
 
   const {
     Title: title,
